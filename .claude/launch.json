@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "zacs-hills-site",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [".claude/serve.js", ".", "5173"],
+      "port": 5173
+    }
+  ]
+}
