@@ -678,40 +678,6 @@ html.menu-open .site-header { background: var(--white); }
 .hero__media > img,
 .hero__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
-/* Pause / play for the film. Motion that runs longer than five seconds needs a
-   way to stop it (WCAG 2.2.2), and this is also the fallback when a browser
-   refuses to autoplay (iOS Low Power Mode, data saver). */
-.hero__toggle {
-  position: absolute;
-  top: 16px;
-  right: var(--gutter);
-  z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border: 1px solid var(--rule-on-dark-strong);
-  background: rgba(0, 0, 0, 0.2);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  color: var(--white);
-  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
-}
-.hero__toggle[hidden] { display: none; }
-.hero__toggle:hover { background: var(--white); border-color: var(--white); color: var(--night); }
-.hero__toggle .i { width: 15px; height: 15px; }
-.hero__toggle .i--play { display: none; }
-.hero__toggle.is-paused .i--play { display: block; }
-.hero__toggle.is-paused .i--pause { display: none; }
-.hero__toggle.is-paused { border-color: var(--white); } /* reads as an invitation when stopped */
-
-@media (min-width: 900px) {
-  /* Bottom right, level with the stats row. */
-  .hero__toggle { top: auto; bottom: clamp(36px, 5vw, 60px); }
-}
-
 /* The light green cast from the reference: multiply, so a photograph keeps
    its own contrast instead of washing flat. */
 .hero__tint {

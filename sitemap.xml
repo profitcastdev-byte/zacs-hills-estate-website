@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  lp.zacsvalley.com sitemap.
+
+  Only Zacs Hills Estate is listed here, because that is all this repo deploys.
+  The eight resort landing pages sit on the same subdomain and belong in this
+  same file - merge their URLs in from the "Zacs Valley - Landing Page" project
+  before submitting to Search Console, or the subdomain will report one URL.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://lp.zacsvalley.com/zacs-hills-estate.html</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://lp.zacsvalley.com/assets/video/zacs-hero-poster.jpg</image:loc>
+      <image:title>The valley at Zacs Hills Estate, Kodaikanal</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lp.zacsvalley.com/assets/img/photos/master-plan.webp</image:loc>
+      <image:title>Zacs Hills Estate plot layout</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lp.zacsvalley.com/assets/img/photos/villa-valley-view.webp</image:loc>
+      <image:title>Villa with valley view at Zacs Hills Estate</image:title>
+    </image:image>
+  </url>
+</urlset>

@@ -1,0 +1,43 @@
+# lp.zacsvalley.com
+#
+# This file governs the WHOLE subdomain, not just Zacs Hills Estate. The eight
+# resort landing pages deployed here are covered by it too, so coordinate any
+# change with the "Zacs Valley - Landing Page" project before editing.
+
+User-agent: *
+Allow: /
+
+# AI answer engines, allowed on purpose. Being quotable inside ChatGPT,
+# Perplexity, Gemini and Google AI Overviews is a discovery channel for a
+# project whose buyers research for months before they call.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: https://lp.zacsvalley.com/sitemap.xml

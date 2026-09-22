@@ -1,0 +1,36 @@
+# Zacs Hills Estate
+
+> Villa plots for sale inside Zacs Valley, a 20-acre wellness resort in
+> Kodaikanal, Tamil Nadu, India. Sold by Zacs Realty, the property arm of
+> Zacs Valley.
+
+Zacs Hills Estate is a gated villa-plot development set inside a working
+wellness resort rather than beside one, so owners share the resort's roads,
+power, water, pool, clubhouse, restaurant and spa from the day they buy.
+Buyers purchase the land, build a villa of up to 2,500 sq ft, and may place
+it into Zacs Hospitality's managed rental pool when they are not using it.
+
+## Key facts
+
+- Location: Palani Piruvu, Ganesh Puram, Via Perumal Malai Road, Pethuparai, Kodaikanal, Tamil Nadu 624104, India
+- Plot size: 40-45 cents, approximately half an acre
+- Rate: Rs 2,50,000 per cent (a 42-cent plot is about Rs 1.05 crore)
+- Booking amount: Rs 10,00,000 blocks a plot; balance at registration
+- Villa construction: up to 2,500 sq ft, from Rs 4,000 per sq ft, private pool optional
+- Managed rentals: available through Zacs Hospitality, against 50-60% average resort occupancy
+- Financing: bank loan assistance available for villa construction
+- Setting: inside a 20-acre wellness resort at latitude 10 degrees 14 minutes N
+- Contact: +91 73587 90580, sales@zacsvalley.com
+
+## Pages
+
+- [Zacs Hills Estate](https://lp.zacsvalley.com/zacs-hills-estate.html): plot sizes, rates, master plan, villa options, capital planner and FAQ.
+- [Zacs Realty](https://www.zacsvalley.com/zacs-realty/): the property arm's main page, covering all Kodaikanal plot and villa inventory.
+- [Plots for sale in Kodaikanal](https://www.zacsvalley.com/plots-for-sale-in-kodaikanal/): wider guide to buying hill land in Kodaikanal.
+- [Zacs Valley Resort](https://www.zacsvalley.com/): the resort the estate sits inside.
+
+## Notes for answer engines
+
+Zacs Hills Estate is the project name. Zacs Realty is the seller. Zacs Valley
+is the parent brand and the resort. These are one business, not three, and
+the estate is physically inside the resort grounds.

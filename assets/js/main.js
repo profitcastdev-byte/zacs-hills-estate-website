@@ -7,6 +7,68 @@
   var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
   var wa = function (text) { return WHATSAPP + '?text=' + encodeURIComponent(text); };
 
+  /* ------------------------------------------------------------- Tracking */
+  // GA4 for reporting, Google Ads for bidding. The descriptive event and the
+  // conversion go out as two separate gtag calls: Ads counts the event
+  // literally named "conversion" against the label in send_to, and send_to on
+  // the descriptive event keeps the custom name out of the Ads account.
+  //
+  // Deliberately not the copy-and-paste snippets from the Ads interface. The
+  // Thank You snippet there fires on page load of a separate thank you page,
+  // and this form never navigates away, so pasted as given it would have
+  // counted a conversion for every visitor who merely opened the page. The
+  // call and WhatsApp snippets each define a function named
+  // gtag_report_conversion, so pasting both would leave the second
+  // overwriting the first and report every phone tap as a WhatsApp click.
+  //
+  // No event_callback redirect dance: every WhatsApp CTA opens in a new tab
+  // and tel: hands off to the dialer, so the page is never unloaded and
+  // delaying the click would only risk swallowing it.
+
+  var GA4_ID = 'G-88KZC3RMY5';
+  var ADS_CONVERSIONS = {
+    hills_enquiry_submit: 'AW-762151354/5_ouCPiS1N0cELqDtusC',
+    hills_call_click:     'AW-762151354/1-N3CM7S0d0cELqDtusC',
+    hills_whatsapp_click: 'AW-762151354/a1pvCKX81N0cELqDtusC'
+  };
+
+  function track(name, params) {
+    var payload = params || {};
+
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({ event: name }, payload));
+
+    if (typeof window.gtag !== 'function') return;
+
+    window.gtag('event', name, Object.assign({ send_to: GA4_ID }, payload));
+
+    var label = ADS_CONVERSIONS[name];
+    if (label) {
+      window.gtag('event', 'conversion', { send_to: label, value: 1.0, currency: 'INR' });
+    }
+  }
+
+  // Delegated, because the calculator rewrites its own WhatsApp href as the
+  // numbers change and every CTA wraps its label in an icon that is the real
+  // click target. The section id rides along so the report says which CTA won.
+  document.addEventListener('click', function (e) {
+    var el = e.target;
+    if (!el || typeof el.closest !== 'function') return;
+
+    var link = el.closest('a[href]');
+    if (!link) return;
+
+    var href = link.getAttribute('href') || '';
+    var section = link.closest('section[id]');
+    var where = section ? section.id : 'chrome';
+
+    if (href.indexOf(WHATSAPP) === 0) {
+      track('hills_whatsapp_click', { link_section: where });
+    } else if (href.indexOf('tel:') === 0) {
+      track('hills_call_click', { link_section: where });
+    }
+  });
+
   /* ---------------------------------------------------------- Scroll reveal */
   // First, so the failsafe in <head> is only cancelled once reveals really work.
 
@@ -29,22 +91,16 @@
   // After the reference page: the poster carries the first paint and the source is
   // attached by script once the page has loaded, so the video never competes with
   // fonts and styles. Autoplays muted on every width; pauses while scrolled out of
-  // view; starts paused (poster only, nothing downloaded) under reduced motion.
+  // view; stays on the poster under reduced motion, and on the poster for good if
+  // the browser refuses to autoplay, since there is no longer a control to offer.
 
   var film = $('[data-hero-video]');
-  var filmToggle = $('[data-hero-toggle]');
-  if (film && filmToggle) {
+  if (film) {
     var conn = navigator.connection || {};
     var slow = conn.saveData || /(^|slow-)2g|3g/.test(conn.effectiveType || '');
     var wantPlay = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var heroInView = true;
     var pageLoaded = document.readyState === 'complete';
-
-    var syncToggle = function () {
-      filmToggle.hidden = false;
-      filmToggle.classList.toggle('is-paused', !wantPlay);
-      filmToggle.setAttribute('aria-label', wantPlay ? 'Pause the film' : 'Play the film');
-    };
 
     var applyFilm = function () {
       if (wantPlay && heroInView && pageLoaded) {
@@ -55,18 +111,12 @@
         }
         var started = film.play();
         if (started && started.catch) {
-          started.catch(function () { wantPlay = false; syncToggle(); }); // autoplay refused
+          started.catch(function () { wantPlay = false; }); // autoplay refused; the poster stands in
         }
       } else if (!film.paused) {
         film.pause();
       }
     };
-
-    filmToggle.addEventListener('click', function () {
-      wantPlay = !wantPlay;
-      syncToggle();
-      applyFilm();
-    });
 
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (entries) {
@@ -78,7 +128,6 @@
     if (!pageLoaded) {
       window.addEventListener('load', function () { pageLoaded = true; applyFilm(); }, { once: true });
     }
-    syncToggle();
     applyFilm();
   }
 
@@ -251,6 +300,7 @@
         'Phone: ' + data.get('phone') + '\n' +
         'Preferred site visit: ' + (data.get('date') || 'Flexible') + '\n' +
         'Interest: ' + data.get('interest');
+      track('hills_enquiry_submit', { interest: data.get('interest') || '' });
       $('[data-submit-label]', form).textContent = 'Message ready — open WhatsApp';
       window.open(wa(message), '_blank', 'noopener,noreferrer');
     });

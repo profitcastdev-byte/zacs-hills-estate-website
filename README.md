@@ -19,9 +19,16 @@ assets/video/              hero film (1080p + 720p) and its poster frame
 
 ## Deploy
 
-`deploy/zacs-hills-estate-website.zip` (12.9 MB) holds only what the live site needs: `index.html` at
-the top level plus `assets/`. The dev tools in `.claude/`, this README and the `deploy/` folder
-itself are left out.
+Live URL: **https://lp.zacsvalley.com/zacs-hills-estate.html**
+
+`deploy/zacs-hills-estate-website.zip` holds only what the live site needs: the page, `assets/`,
+and the three SEO root files (`robots.txt`, `sitemap.xml`, `llms.txt`). The dev tools in
+`.claude/`, this README and the `deploy/` folder itself are left out.
+
+The page ships as **`zacs-hills-estate.html`**, not `index.html`. The `lp` subdomain already
+serves the eight resort landing pages and their review index at `/index.html`; uploading an
+`index.html` there would overwrite it. `robots.txt` and `sitemap.xml` govern that whole
+subdomain too - read the comments inside them before replacing anything already live.
 
 - **cPanel / Hostinger / GoDaddy:** upload the zip to `public_html` (or the domain's folder) and
   extract it there.
