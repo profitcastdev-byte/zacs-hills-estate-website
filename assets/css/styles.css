@@ -1712,6 +1712,16 @@ html.menu-open .site-header { background: var(--white); }
 }
 .field input:user-invalid { border-color: var(--night); box-shadow: inset 0 -2px 0 var(--night); }
 
+/* Honeypot. Moved off-screen rather than hidden with display:none or
+   visibility:hidden, both of which a bot can test for and skip. */
+.enquiry__trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .enquiry__submit { margin-top: 28px; min-height: 56px; }
 .enquiry__note { margin-top: 14px; font-size: 0.75rem; line-height: 1.6; text-align: center; color: var(--ink-softer); }
 

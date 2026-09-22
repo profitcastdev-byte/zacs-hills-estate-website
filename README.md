@@ -49,6 +49,24 @@ node .claude/serve.js . 5173
 Then open http://localhost:5173. Opening `index.html` straight from disk mostly works, but some
 browsers block the self-hosted fonts over `file://`.
 
+## Leads
+
+The enquiry form does two things with one submit: it opens a pre-filled WhatsApp message (the
+conversion the team actually works) and it posts a row to the Google Sheet **Profitcast X Zacs
+Valley - Hills Estate**, so a visitor who never finishes the WhatsApp handoff is still captured.
+
+The receiver is `google-apps-script/lead-endpoint.gs` — deploy steps are in the file header. Paste
+the resulting `/exec` URL into `data-endpoint` on the form in `index.html`. **While
+`data-endpoint` is empty the form still works and still opens WhatsApp; it just records no row.**
+
+Each row carries `gclid` and the four `utm_*` values, read from the landing URL on arrival and
+kept in `sessionStorage`. That is what makes Google Ads offline conversion import possible later:
+a plot sale closes weeks after the click, and the gclid is the only thing tying the two together.
+
+The post is fire-and-forget via `sendBeacon`, because the same click is opening WhatsApp in a new
+tab. Nothing is allowed to delay that handoff. The form also carries an off-screen honeypot field
+named `company`; the script answers a filled one with 200 and writes nothing.
+
 ## Content
 
 All copy, figures, plot data, FAQ answers, links and WhatsApp messages are carried over word for word

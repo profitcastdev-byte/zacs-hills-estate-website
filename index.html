@@ -751,7 +751,11 @@
         </ul>
       </div>
 
-      <form class="enquiry reveal" style="--d:1" data-enquiry>
+      <!-- data-endpoint: the Apps Script /exec URL from google-apps-script/
+           lead-endpoint.gs. Left empty until the web app is deployed; the form
+           still works and still hands off to WhatsApp, it just records no row. -->
+      <form class="enquiry reveal" style="--d:1" data-enquiry
+            data-endpoint="https://script.google.com/macros/s/AKfycbzYFvDca0x1N6ubxw9AIXXW3BKTTEXj-Weoct9WvtQJsX3-GLJqUnt9nSz7Lhw_ch5x/exec">
         <div class="enquiry__head">
           <div>
             <p class="label">Quick enquiry</p>
@@ -782,6 +786,13 @@
               <option>Site visit &amp; videos</option>
             </select>
           </div>
+        </div>
+
+        <!-- Honeypot. Off-screen rather than display:none, which the better
+             bots check for. A filled one is answered 200 and never written. -->
+        <div class="enquiry__trap" aria-hidden="true">
+          <label for="f-company">Company</label>
+          <input id="f-company" name="company" type="text" tabindex="-1" autocomplete="off">
         </div>
 
         <button class="btn btn--block enquiry__submit" type="submit">

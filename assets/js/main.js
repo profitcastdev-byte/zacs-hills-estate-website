@@ -290,8 +290,54 @@
 
   /* -------------------------------------------------- Site visit enquiry */
 
+  // Ad attribution, read once on arrival and kept for the session. Captured up
+  // front rather than at submit time so the values are the ones the visitor
+  // actually landed on, whatever rewrites the URL between arriving and filling
+  // the form in.
+  var ATTRIBUTION_KEY = 'zhe_attribution';
+
+  function attribution() {
+    var stored = null;
+    try { stored = JSON.parse(sessionStorage.getItem(ATTRIBUTION_KEY) || 'null'); } catch (err) { /* private mode */ }
+    if (stored) return stored;
+
+    var q = new URLSearchParams(location.search);
+    var fresh = {
+      gclid: q.get('gclid') || '',
+      utm_source: q.get('utm_source') || '',
+      utm_medium: q.get('utm_medium') || '',
+      utm_campaign: q.get('utm_campaign') || '',
+      utm_term: q.get('utm_term') || '',
+      referrer: document.referrer || ''
+    };
+    try { sessionStorage.setItem(ATTRIBUTION_KEY, JSON.stringify(fresh)); } catch (err) { /* private mode */ }
+    return fresh;
+  }
+
+  // Fire and forget, on purpose. The same click opens WhatsApp in a new tab, so
+  // this one is racing a context switch: sendBeacon is built for exactly that
+  // and returns immediately. FormData posts as multipart, which is a CORS
+  // safelisted request, so there is no preflight for an Apps Script web app to
+  // fail to answer. Nothing here is allowed to delay the WhatsApp handoff,
+  // which is the conversion that actually matters.
+  function sendLead(endpoint, data) {
+    if (!endpoint) return;
+
+    var attr = attribution();
+    for (var key in attr) {
+      if (Object.prototype.hasOwnProperty.call(attr, key) && attr[key]) data.append(key, attr[key]);
+    }
+    data.append('page', 'zacs-hills-estate');
+
+    if (navigator.sendBeacon && navigator.sendBeacon(endpoint, data)) return;
+    fetch(endpoint, { method: 'POST', body: data, keepalive: true, mode: 'no-cors' })
+      .catch(function () { /* the lead still reaches the team over WhatsApp */ });
+  }
+
   var form = $('[data-enquiry]');
   if (form) {
+    attribution();
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var data = new FormData(form);
@@ -301,6 +347,7 @@
         'Preferred site visit: ' + (data.get('date') || 'Flexible') + '\n' +
         'Interest: ' + data.get('interest');
       track('hills_enquiry_submit', { interest: data.get('interest') || '' });
+      sendLead(form.getAttribute('data-endpoint'), data);
       $('[data-submit-label]', form).textContent = 'Message ready — open WhatsApp';
       window.open(wa(message), '_blank', 'noopener,noreferrer');
     });
