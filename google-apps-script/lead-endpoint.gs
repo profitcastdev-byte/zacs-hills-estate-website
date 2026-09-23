@@ -27,9 +27,13 @@
 
 var SHEET_ID = '1L-yJu235aFymN9vf9PiMFj4eaPU-KhLpSe38DgrEY3s';
 
+/* The four form fields, plus when it arrived. The page still sends gclid and
+   the utm values in the payload - they are simply not written. Putting a
+   column back is a matter of adding it here and to the appendRow below; the
+   page needs no change, which matters because a gclid can only be read on the
+   visit that carried it. */
 var HEADERS = [
-  'Received', 'Name', 'Phone', 'Preferred date', 'Interest',
-  'Page', 'GCLID', 'Source', 'Medium', 'Campaign', 'Term', 'Referrer'
+  'Received', 'Your name', 'Phone number', 'Preferred date', 'I am exploring'
 ];
 
 function doPost(e) {
@@ -41,20 +45,11 @@ function doPost(e) {
     if (p.company) return json({ ok: true });
 
     var sheet = SpreadsheetApp.openById(SHEET_ID).getSheets()[0];
-
-    /* Header row, written once. getLastRow() is 0 on an empty sheet. */
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(HEADERS);
-      sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
-      sheet.setFrozenRows(1);
-    }
+    ensureHeaders(sheet);
 
     sheet.appendRow([
       new Date(),
-      safe(p.name), safe(p.phone), safe(p.date), safe(p.interest),
-      safe(p.page), safe(p.gclid),
-      safe(p.utm_source), safe(p.utm_medium), safe(p.utm_campaign),
-      safe(p.utm_term), safe(p.referrer)
+      safe(p.name), safe(p.phone), safe(p.date), safe(p.interest)
     ]);
 
     return json({ ok: true });
@@ -68,6 +63,32 @@ function doPost(e) {
 
 function doGet() {
   return json({ ok: true, service: 'Zacs Hills Estate lead receiver' });
+}
+
+/**
+ * Makes row 1 match HEADERS, on an empty sheet or a sheet still carrying an
+ * older set.
+ *
+ * Written this way because the first version of this script recorded twelve
+ * columns and only ever wrote the header row when the sheet was completely
+ * empty. Narrowing the list in the code would otherwise have left the old
+ * headings sitting above rows that no longer fill them, and required clearing
+ * the sheet by hand to fix. This just corrects it on the next lead.
+ */
+function ensureHeaders(sheet) {
+  var width = Math.max(sheet.getLastColumn(), HEADERS.length);
+
+  if (sheet.getLastRow() > 0) {
+    var row = sheet.getRange(1, 1, 1, width).getValues()[0];
+    var correct = HEADERS.every(function (h, i) { return row[i] === h; }) &&
+      row.slice(HEADERS.length).every(function (c) { return c === '' || c === null; });
+    if (correct) return;
+    sheet.getRange(1, 1, 1, width).clearContent();
+  }
+
+  sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+  sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
+  sheet.setFrozenRows(1);
 }
 
 /**

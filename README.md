@@ -59,9 +59,12 @@ The receiver is `google-apps-script/lead-endpoint.gs` — deploy steps are in th
 the resulting `/exec` URL into `data-endpoint` on the form in `index.html`. **While
 `data-endpoint` is empty the form still works and still opens WhatsApp; it just records no row.**
 
-Each row carries `gclid` and the four `utm_*` values, read from the landing URL on arrival and
-kept in `sessionStorage`. That is what makes Google Ads offline conversion import possible later:
-a plot sale closes weeks after the click, and the gclid is the only thing tying the two together.
+The sheet holds five columns: `Received` plus the four form fields. The page still *sends* `gclid`
+and the four `utm_*` values — read from the landing URL on arrival and kept in `sessionStorage` —
+they are simply not written. Restoring a column means adding it to `HEADERS` and `appendRow` in
+the script and redeploying; the page needs no change. That split is deliberate, because a `gclid`
+can only ever be read on the visit that carried it, so the capture has to stay on even while the
+column is off.
 
 The post is fire-and-forget via `sendBeacon`, because the same click is opening WhatsApp in a new
 tab. Nothing is allowed to delay that handoff. The form also carries an off-screen honeypot field
